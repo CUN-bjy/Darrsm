@@ -1,0 +1,43 @@
+<launch>
+
+	<arg name="gui" default="False"/>
+
+
+	<!-- KINECT v1 device setup using openNI-->
+	<include file="$(find openni_launch)/launch/openni.launch">
+		<arg name="camera" value="kinect"/>
+
+	</include>
+
+	<!-- robot&joint_state_publisher using URDF file; 
+												it will publish 'tf' topic-->
+	<include file="$(find darrsm)/launch/display.launch">
+		<arg name="model" value="$(find darrsm)/urdf/robot_x.urdf"/>		
+		<arg name="gui" value="$(arg gui)"/>
+	</include>																	
+
+	<!-- This node publish additional transformation to conect other links-->	
+	<node pkg="darrsm" type="tf_broadcaster" name="tf_broadcaster"/>
+
+	<!-- This node convert depthimage into laserscan data-->
+	<node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan"
+										name="depthimage_to_laserscan">
+		<remap from="image" to="/kinect/depth/image_raw"/>
+	</node>
+	<param name="output_frame_id" value="kinect_depth_frame"/>
+
+
+	<node pkg="gmapping" type="slam_gmapping" name="slam_mapping">
+		<param name="map_update_interval" value="3.0"/>
+		
+		<param name="xmin" value="-25.0"/>
+      	<param name="ymin" value="-25.0"/>
+     	<param name="xmax" value="25.0"/>
+      	<param name="ymax" value="25.0"/>
+      	<param name="delta" value="0.05"/>
+	</node>
+
+
+	<node if="$(arg gui)" pkg="rviz" type="rviz" name="rviz"/>
+
+</launch>
