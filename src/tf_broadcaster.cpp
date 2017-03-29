@@ -14,11 +14,6 @@ int main(int argc, char** argv){
 			tf::StampedTransform(
 				tf::Transform(tf::Quaternion(0,0,0,1),tf::Vector3(0.0,0.0,0.0)),
 				ros::Time::now(),"kinect", "kinect_link"));
-		
-		broadcaster.sendTransform(
-			tf::StampedTransform(
-				tf::Transform(tf::Quaternion(0,0,0,1),tf::Vector3(0.0,0.0,0.0)),
-				ros::Time::now(),"odom", "base_link"));
 
 		r.sleep();
 	}
