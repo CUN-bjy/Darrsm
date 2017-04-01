@@ -5,9 +5,11 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf
   nav_msgs
+  dynamixel_workbench_msgs
 )
 
-catkin_package()
+catkin_package(
+)
 
 
 include_directories(include

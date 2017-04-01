@@ -22,7 +22,7 @@
 				<geometry>
 					<cylinder length="0.04" radius="${wheel_radius}"/>
 				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0.07"/>
+				<origin rpy="0 0 0" xyz="0 0 0.05"/>
 				<material name="black">
 					<color rgba="0 0 0 1"/>
 				</material>
@@ -65,7 +65,7 @@
 		<link name="wheel_1">
 			<xacro:wheel_shape/>
 		</link>
-		<link name="wheel_2">
+		<link name="wheel_2">s
 			<xacro:wheel_shape/>
 		</link>
 
@@ -89,14 +89,14 @@
 		<joint name="B2W1" type="continuous">
 			<parent link="base_link"/>
 			<child link="wheel_1"/>
-			<origin xyz="0.05 0 ${-(base_size_z/2 + 0.01)}" rpy="0 ${PI/2} 0"/>
+			<origin xyz="0.07 0 ${-(base_size_z/2 + 0.01)}" rpy="0 ${PI/2} 0"/>
 			<axis xyz="0 0 1"/>
 		</joint>
 
 		<joint name="B2W2" type="continuous">
 			<parent link="base_link"/>
 			<child link="wheel_2"/>
-			<origin xyz="-0.05 0 ${-(base_size_z/2 + 0.01)}" rpy="0 ${-PI/2} 0"/>
+			<origin xyz="-0.07 0 ${-(base_size_z/2 + 0.01)}" rpy="${PI} ${PI/2} 0"/>
 			<axis xyz="0 0 1"/>
 		</joint>
 	</robot>

@@ -37,12 +37,44 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
+#include <dynamixel_workbench_msgs/SetDirection.h>
+
+#define wheel_radius 0.065
+#define CM2wheel 0.12
+
+
+double right_motor_velocity_, left_motor_velocity_;
+
+bool read_velocity_callback(dynamixel_workbench_msgs::SetDirection::Request &req,
+                            dynamixel_workbench_msgs::SetDirection::Response &res)
+{
+
+   if (req.right_wheel_velocity == 0.0 || req.left_wheel_velocity == 0.0)
+  {
+    right_motor_velocity_ = 0.0;
+    left_motor_velocity_ = 0.0;
+  }
+  else
+  {
+    right_motor_velocity_ += req.right_wheel_velocity;
+    left_motor_velocity_  += req.left_wheel_velocity;
+  }
+
+  res.right_wheel_velocity = right_motor_velocity_;
+  res.left_wheel_velocity = left_motor_velocity_;
+
+  return true;
+}
+
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "odometry_publisher");
 
   ros::NodeHandle n;
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
+  ros::ServiceServer wheel_control_server_ = 
+    n.advertiseService("/dynamixel_workbench_tutorials/wheel", read_velocity_callback);
+
   tf::TransformBroadcaster odom_broadcaster;
 
   double x = 0.0;
@@ -57,9 +89,16 @@ int main(int argc, char** argv){
   current_time = ros::Time::now();
   last_time = ros::Time::now();
 
-  ros::Rate r(1.0);
+  ros::Rate r(125);
   while(n.ok()){
     current_time = ros::Time::now();
+
+    double Lv = left_motor_velocity_*wheel_radius;
+    double Rv = right_motor_velocity_*wheel_radius;
+
+    vx = 0;
+    vy = -(Lv + Rv);
+    vth = (Rv - Lv) * CM2wheel;
 
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();
@@ -109,6 +148,7 @@ int main(int argc, char** argv){
     odom_pub.publish(odom);
 
     last_time = current_time;
+    ros::spinOnce();
     r.sleep();
   }
 }
