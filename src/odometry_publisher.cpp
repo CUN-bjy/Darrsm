@@ -93,8 +93,8 @@ int main(int argc, char** argv){
   while(n.ok()){
     current_time = ros::Time::now();
 
-    double Lv = left_motor_velocity_*wheel_radius;
-    double Rv = right_motor_velocity_*wheel_radius;
+    double Lv = left_motor_velocity_ * wheel_radius;
+    double Rv = right_motor_velocity_ * wheel_radius;
 
     vx = 0;
     vy = -(Lv + Rv);
