@@ -18,3 +18,4 @@ Darrsm is that 'Disaster and Rescue Robot Simulation & modeling'.
   
 with 'gui:=true' : run rviz & joint_state_gui
 
+with 'cntl:=true' : run dynamixel_workbench_wheel

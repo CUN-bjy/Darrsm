@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 
     vx = 0;
     vy = -(Lv + Rv);
-    vth = (Rv - Lv) * CM2wheel;
+    vth = (Rv - Lv) / CM2wheel;
 
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();

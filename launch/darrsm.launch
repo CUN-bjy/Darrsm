@@ -1,6 +1,7 @@
 <launch>
 
 	<arg name="gui" default="False"/>
+	<arg name="cntl" default="False"/>
 
 
 	<!-- KINECT v1 device setup using openNI-->
@@ -40,5 +41,7 @@
 
 	<!--It is option to show data and simulations -->
 	<node if="$(arg gui)" pkg="rviz" type="rviz" name="rviz"/>
+	<node if="$(arg cntl)" pkg="dynamixel_workbench_tutorials"
+			type="dynamixel_workbench_wheel" name="wheel_cntl"/>
 
 </launch>
