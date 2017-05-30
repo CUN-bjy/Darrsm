@@ -7,6 +7,7 @@
 	<!-- KINECT v1 device setup using openNI-->
 	<include file="$(find openni_launch)/launch/openni.launch">
 		<arg name="camera" value="kinect"/>
+		 <arg name="device_id" value="#1"/> for disconnect situation
 	</include>
 
 	<!-- robot&joint_state_publisher using URDF file. 
@@ -29,6 +30,7 @@
 
 	<!--Using scann data & Odometry with tf, 
 	this node create a occupancygrid and estimate the robot's pose in the map.-->
+	
 	<node pkg="gmapping" type="slam_gmapping" name="slam_mapping">
 		<param name="map_update_interval" value="3.0"/>
 		
@@ -39,6 +41,42 @@
       	<param name="delta" value="0.05"/>
 	</node>
 
+
+
+<!-- 	<arg name="use_map_topic" default="false"/>
+	<arg name="scan_topic" default="scan"/>
+	<arg name="initial_pose_x" default="0.0"/>
+	<arg name="initial_pose_y" default="0.0"/>
+	<arg name="initial_pose_a" default="0.0/"/>
+ -->
+	<!-- <node pkg="amcl" type="amcl" name="amcl">
+		<param name="use_map_topic" value="$(arg use_map_topic)"/>
+		<param name="odom_model_type" value="diff"/>
+		<param name="odom_alpha5" value="0.1"/>
+		<param name="gui_publish_rate" value="10.0"/>
+		<param name="laser_max_beams" value="60"/>
+		<param name="lase_max_ranges" value="12.0"/>
+
+		<remap from="scan" to="$(arg scan_topic)"/>
+	</node> -->
+	<!--  <arg name="cmd_vel_topic" default="/mobile_base/commands/velocity"/>
+	<arg name="odom_topic" default="odom"/>
+ -->
+
+
+ 
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+		<rosparam file="$(find darrsm)/param/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+		<rosparam file="$(find darrsm)/param/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+		<rosparam file="$(find darrsm)/param/local_costmap_params.yaml" command="load"/>
+		<rosparam file="$(find darrsm)/param/global_costmap_params.yaml" command="load"/>
+		<rosparam file="$(find darrsm)/param/move_base_params.yaml" command="load"/>
+		<rosparam file="$(find darrsm)/param/base_local_planner_params.yaml" command="load"/>
+<!-- 		<param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/> -->
+ 
+	 	<!-- <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+		<remap from="odom" to="$(arg odom_topic)"/> -->
+	</node>
 	<!--It is option to show data and simulations -->
 	<node if="$(arg gui)" pkg="rviz" type="rviz" name="rviz"/>
 	<node if="$(arg cntl)" pkg="dynamixel_workbench_tutorials"

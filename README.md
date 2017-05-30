@@ -12,6 +12,7 @@ Darrsm is that 'Disaster and Rescue Robot Simulation & modeling'.
 - "gmapping" i.e. slam algorithm : scan + odometry -> map data
 - "DynamixelSDK" for dynamixel programming
 - "dynamixel-workbench" : a meta package to control dynamixels
+- "navigation" : a meta package to create trajectory including global and local path, using costmap2d.
 
 #### Way to Launch
     roslaunch darrsm darrsm.launch

@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 )
 
-
 include_directories(include
 	${catkin_INCLUDE_DIRS}
 )
@@ -35,3 +34,7 @@ install(TARGETS odometry_publisher
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+#--------------------------------------------------------
+add_executable(send_goal src/send_robot_goal.cpp)
+target_link_libraries(send_goal ${catkin_LIBRARIES})
