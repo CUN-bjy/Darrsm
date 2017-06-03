@@ -39,31 +39,22 @@
 #include <nav_msgs/Odometry.h>
 #include <dynamixel_workbench_msgs/SetDirection.h>
 
-#define wheel_radius 0.065
-#define CM2wheel 0.12
+#define wheel_radius 0.0635
+#define CM2wheel 0.19238
 
 
-double right_motor_velocity_, left_motor_velocity_;
+// double right_motor_velocity_, left_motor_velocity_;
+float dx, dy, dr;
 
-bool read_velocity_callback(dynamixel_workbench_msgs::SetDirection::Request &req,
-                            dynamixel_workbench_msgs::SetDirection::Response &res)
+void twistCallback(const geometry_msgs::Twist &msg)
 {
 
-   if (req.right_wheel_velocity == 0.0 || req.left_wheel_velocity == 0.0)
-  {
-    right_motor_velocity_ = 0.0;
-    left_motor_velocity_ = 0.0;
-  }
-  else
-  {
-    right_motor_velocity_ += req.right_wheel_velocity;
-    left_motor_velocity_  += req.left_wheel_velocity;
-  }
+  // ticks_since_target = 0;
+  
+  dx = msg.linear.x;
+  dy = msg.linear.y;
+  dr = msg.angular.z;
 
-  res.right_wheel_velocity = right_motor_velocity_;
-  res.left_wheel_velocity = left_motor_velocity_;
-
-  return true;
 }
 
 
@@ -72,10 +63,11 @@ int main(int argc, char** argv){
 
   ros::NodeHandle n;
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
-  ros::ServiceServer wheel_control_server_ = 
-    n.advertiseService("/dynamixel_workbench_tutorials/wheel", read_velocity_callback);
-
+  
   tf::TransformBroadcaster odom_broadcaster;
+
+
+  ros::Subscriber cmd_vel_sub = n.subscribe("cmd_vel",10, &twistCallback);
 
   double x = 0.0;
   double y = 0.0;
@@ -93,12 +85,15 @@ int main(int argc, char** argv){
   while(n.ok()){
     current_time = ros::Time::now();
 
-    double Lv = left_motor_velocity_ * wheel_radius;
-    double Rv = right_motor_velocity_ * wheel_radius;
+    // double Lv = left_motor_velocity_ * wheel_radius;
+    // double Rv = right_motor_velocity_ * wheel_radius;
 
-    vx = 0;
-    vy = -(Lv + Rv);
-    vth = (Rv - Lv) / CM2wheel;
+    // vx = 0;
+    // vy = -(Lv + Rv);
+    // vth = (Rv - Lv) / CM2wheel;
+    vx = dx;
+    vy = dy;
+    vth = dr;
 
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();

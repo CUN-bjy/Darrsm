@@ -38,3 +38,8 @@ install(TARGETS odometry_publisher
 #--------------------------------------------------------
 add_executable(send_goal src/send_robot_goal.cpp)
 target_link_libraries(send_goal ${catkin_LIBRARIES})
+
+#---------------------------------------------------------
+add_executable(twist_to_motor src/twist_to_motor.cpp)
+target_link_libraries(twist_to_motor ${catkin_LIBRARIES})
+

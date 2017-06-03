@@ -3,26 +3,16 @@
 <!--=======================XACRO DEFINE==============================!-->
 		
 		<xacro:property name="PI" value="3.141592"/>
-		<xacro:property name="wheel_radius" value="0.065"/>
-		<xacro:property name="base_size_z" value="0.1"/>
+		<xacro:property name="wheel_radius" value="0.0635"/>
+		<xacro:property name="base_size_z" value="0.086"/>
+		<xacro:property name="upper_size_z" value="0.065"/>
 
-		<xacro:macro name="upper_shape" params="yaw x_vec y_vec">
-			<visual>
-				<geometry>
-					<box size="0.05 .3 .1"/>
-				</geometry>
-				<origin rpy="0 0 ${yaw}" xyz="${x_vec} ${y_vec} ${base_size_z/2}"/>
-				<material name="brown">
-					<color rgba="0.5 0.4 0.2 1"/>
-				</material>
-			</visual>
-		</xacro:macro>
 		<xacro:macro name="wheel_shape">
 			<visual>
 				<geometry>
 					<cylinder length="0.04" radius="${wheel_radius}"/>
 				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0.05"/>
+				<origin rpy="0 0 0" xyz="0 0 0.1145"/>
 				<material name="black">
 					<color rgba="0 0 0 1"/>
 				</material>
@@ -35,7 +25,7 @@
 		<link name="base_link">
 			<visual>
 				<geometry>
-					<box size="0.2 .3 ${base_size_z}"/>
+					<box size="0.400 .300 ${base_size_z}"/>
 				</geometry> 
 				<origin rpy="0 0 0" xyz="0 0 0"/>
 				<material name="white">
@@ -45,15 +35,39 @@
 		</link>
 
 		<link name="upper_link">
-			<xacro:upper_shape yaw = "${0}" x_vec="0.0866" y_vec="0"/>
-			<xacro:upper_shape yaw = "${-PI/3}" x_vec="-0.0433" y_vec="0.075"/>
-			<xacro:upper_shape yaw = "${PI/3}" x_vec="-0.0433" y_vec="-0.075"/>
+			<visual>
+				<geometry>
+					<box size=".080 0.340 ${upper_size_z}"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz=".140 0 ${upper_size_z/2}"/>
+				<material name="brown">
+					<color rgba="0.5 0.4 0.2 1"/>
+				</material>
+			</visual>
+			<visual>
+				<geometry>
+					<box size=".080 0.340 ${upper_size_z}"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="-0.140 0 ${upper_size_z/2}"/>
+				<material name="brown">
+					<color rgba="0.5 0.4 0.2 1"/>
+				</material>
+			</visual>
+			<visual>
+				<geometry>
+					<box size="0.200 .200 ${upper_size_z}"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 ${upper_size_z/2}"/>
+				<material name="brown">
+					<color rgba="0.5 0.4 0.2 1"/>
+				</material>
+			</visual>
 		</link>
 
 		<link name="kinect">
 			<visual>
 				<geometry>
-					<box size="0.08 .2 ${base_size_z-0.02}"/>
+					<box size="0.1 .2 ${upper_size_z-0.02}"/>
 				</geometry>
 				<origin xyz="0 0 0"/>
 				<material name="black">
@@ -75,7 +89,7 @@
 		<joint name="B2U" type="revolute">
 			<parent link="base_link"/>
 			<child link="upper_link"/>
-			<origin xyz="0 0 ${base_size_z/2+0.005}" rpy="0 0 ${-PI/2}"/>
+			<origin xyz="0 0 ${base_size_z/2+0.03809}" rpy="0 0 0"/>
 			<axis xyz="0 0 1"/>
 			<limit effort="1000.0" lower="${-PI}" upper="${PI}" velocity="0.5"/>
 		</joint>
@@ -83,20 +97,20 @@
 		<joint name="U2K" type="fixed">
 			<parent link="upper_link"/>
 			<child link="kinect"/>
-			<origin xyz="0.0866 0 ${base_size_z/2}" rpy="0 0 0"/>
+			<origin xyz="0.140 0 ${upper_size_z/2}" rpy="0 0 0"/>
 		</joint>
 
 		<joint name="B2W1" type="continuous">
 			<parent link="base_link"/>
 			<child link="wheel_1"/>
-			<origin xyz="0.07 0 ${-(base_size_z/2 + 0.01)}" rpy="0 ${PI/2} 0"/>
+			<origin xyz="0 0.07788 ${-(base_size_z/2 + 0.0305)}" rpy="0 ${PI/2} ${PI/2}"/>
 			<axis xyz="0 0 1"/>
 		</joint>
 
 		<joint name="B2W2" type="continuous">
 			<parent link="base_link"/>
 			<child link="wheel_2"/>
-			<origin xyz="-0.07 0 ${-(base_size_z/2 + 0.01)}" rpy="${PI} ${PI/2} 0"/>
+			<origin xyz="0 -0.07788 ${-(base_size_z/2 + 0.0305)}" rpy="${PI} ${PI/2} ${PI/2}"/>
 			<axis xyz="0 0 1"/>
 		</joint>
 	</robot>
